@@ -95,3 +95,4 @@ read_Qualtrics <- function(dataCenter, surveyID, API_token) {
   try(file.remove('QUALTRIX.zip'))
   return(res)
 }
+rm(list=setdiff(ls(), c("read_Qualtrics")))
