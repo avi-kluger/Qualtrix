@@ -80,14 +80,37 @@ load_tibble <- function (file_name) {
 }
 
 
-read_Qualtrics <- function(dataCenter, surveyID, API_token) {
+read_Qualtrics <- function(surveyID, 
+                           dataCenter = Sys.getenv("dataCenter"), 
+                           API_token  = Sys.getenv("api_key")) {
   #' Reading data from Qualtrics
   #'
   #' Get survey results in tibble format and try to delete zip
-  #' @param dataCenter qualtrics hostname for your organization (e.g., "az1.qualtrics.com")
+  #' @usage read_Qualtrics (surveyID, 
+  #'                        dataCenter = Sys.getenv("dataCenter"), 
+  #'                        API_token  = Sys.getenv("api_key"))
   #' @param surveyID the survey ID code starting with SV_ (e.g., "SV_czG0xcwKradWRyB")
-  #' @param API_token API token of qualtrics account
-  download_ZIP(dataCenter, surveyID, API_token)
+  #' @param dataCenter qualtrics hostname for your organization (e.g., "az1.qualtrics.com").  The default is dataCenter = Sys.getenv("dataCenter")
+  #' @param API_token API token of qualtrics account.  The default is API_token  = Sys.getenv("api_key")
+  #' @note The defaults could become useful, if dataCenter and API_Token are set once in the environment.
+  #' @author  This function was written by Avi Kluger \email{avik@@savion.huji.ac.il} with help from Nadav Kluger.
+  #' @examples
+  #' 
+  #' # Not run:
+  #' df <- read_Qualtrics(surveyID = "SV_xxxxxxxxxxxxxxx", 
+  #'                      dataCenter = "xxxx.qualtrics.com", 
+  #'                      API_token  = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+  #'                   
+  #' # Set dataCenter and API key in global environment once
+  #' Sys.setenv("dataCenter" = "az1.qualtrics.com")
+  #' Sys.setenv("api_key"    = "<replace with API token>")
+  #' 
+  #' # Use the function's default and supply only the first argument
+  #' df <- read_Qualtrics("SV_e9W83Izkp3gY9Q9")
+  #' 
+  #' # End(**Not run**)
+  download_ZIP(surveyID, dataCenter = Sys.getenv("dataCenter"), 
+                           API_token  = Sys.getenv("api_key"))
   file_name <- unzip("QUALTRIX.zip")
   res <- load_tibble(file_name)
   # Only works if R has the required permissions
@@ -95,3 +118,4 @@ read_Qualtrics <- function(dataCenter, surveyID, API_token) {
   try(file.remove('QUALTRIX.zip'))
   return(res)
 }
+? read_Qualtrics
