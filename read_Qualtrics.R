@@ -17,12 +17,12 @@ get_result_from_HTTP <- function(res) {
 "Check if HTTP response is invalid and print error message if needed"
 assert_status_OK <- function(res, msg) {
   if (res$status_code != 200) {
-    stop(msg)
+    stop(paste(res$status_code, " - ", msg))
   }
 }
 
 "Read survey results to zip file containg csv"
-download_ZIP <- function(dataCenter, surveyID, API_token) {
+download_ZIP <- function( surveyID, dataCenter, API_token) {
   base_url <- paste0("https://",
                      dataCenter,
                      "/API/v3/surveys/",
